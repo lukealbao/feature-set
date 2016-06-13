@@ -82,4 +82,20 @@ describe('Public API', function () {
       expect(shouldThrow).to.throw(/Unregistered Feature: "c"/);
     });
   });
+
+  describe('Running with NODE_FEATURES_DYNAMIC in environment', function () {
+    beforeEach(function () {
+      process.env.NODE_FEATURES_DYNAMIC = '1';
+      process.env.NODE_FEATURES_ENABLED = '';
+      process.env.NODE_FEATURES_DISABLED = 'a';
+    });
+
+    it('Can set features dynamically', function () {
+      var features = new FeatureSet();
+      expect(features.enabled('a')).to.equal(false);
+
+      process.env.NODE_FEATURES_ENABLED = 'a';
+      expect(features.enabled('a')).to.equal(true);
+    });
+  });
 });

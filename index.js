@@ -44,7 +44,11 @@ function FeatureSet (opts) {
 
     this.fromEnv(map);
   }
-}
+
+  if (process.env.NODE_FEATURES_DYNAMIC) {
+    this.enabled = this._dynamicEnabled;
+  }
+};
 
 FeatureSet.prototype.fromEnv = function (map) {
   var enabled = process.env[this.env.enableKey].split(',')
@@ -69,6 +73,10 @@ FeatureSet.prototype.enabled = function (key) {
     throw new TypeError('Unregistered Feature: "' + key + '"');
   }
   return this.features[key];
+};
+
+FeatureSet.prototype._dynamicEnabled = function (key) {
+  return (process.env[this.env.enableKey].split(',').indexOf(key) > -1);
 };
 
 
